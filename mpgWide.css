@@ -1,0 +1,71 @@
+body {
+  background-color: white;
+}
+
+#all {
+  background-color: white;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header {
+  text-align: center;
+  background-color:#0E3A73;
+  color: white;
+}
+
+<<<<<<< HEAD
+=======
+nav {
+  background-color: #AAADB3;
+  float: left;
+  width: 150px;
+  height: 525px;
+}
+
+>>>>>>> 1fa55bcd4e0afafb976147c2b6bb7c3ac1969379
+details {
+  padding-left: 10px;
+}
+
+#content {
+  background-color: white;
+  float: middle;
+  width: 440px;
+<<<<<<< HEAD
+=======
+  /*height: 400px;*/
+>>>>>>> 1fa55bcd4e0afafb976147c2b6bb7c3ac1969379
+  padding-left: 10px;
+  text-align: center;
+}
+
+<<<<<<< HEAD
+=======
+img {
+  width: 500px;
+  background-color: white;
+  align: center;
+  onclick: "showImg(this.src,800,1200,'bearbearbearbear');"
+  /*height: 400px;*/
+}
+
+>>>>>>> 1fa55bcd4e0afafb976147c2b6bb7c3ac1969379
+label{
+  display:block;
+  width:60%;
+  text-align: right;
+  margin-right: 1em;
+}
+
+footer {
+  color: white;
+  background-color: #0E3A73;
+  clear: both;
+  text-align: center;
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 1fa55bcd4e0afafb976147c2b6bb7c3ac1969379

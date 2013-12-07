@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>MPG Calculator</title>
+  <meta charset="UTF-8">
+  <link rel = "stylesheet"
+        type = "text/css"
+        href = "mpgWide.css" />
+  <link rel = "stylesheet"
+        type = "text/css"
+        href = "mpgNarrow.css" />
+  <script type="text/javascript" src="addclasskillclass.js"></script>
+  <script type="text/javascript" src="attachevent.js"></script>
+  <script type="text/javascript" src="addcss.js"></script>
+  <script type="text/javascript" src="tabtastic.js"></script>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<!--History saves-->
+<script type = "text/javascript">
+  
+  //following two functions from: http://inflagrantedelicto.memoryspiral.com/2013/05/phonegap-saving-arrays-in-local-storage/
+  Storage.prototype.setArray = function(key, obj)
+  {
+    return this.setItem(key, JSON.stringify(obj))
+  }
+  Storage.prototype.getArray = function(key)
+  {
+    return JSON.parse(this.getItem(key))
+  }
+  
+  function saveCalc(){
+    console.log("save a calc");
+    //array to save dates of calculations in
+    //array to save mpg's in
+    
+    var mpg = document.getElementById("lblOutput").innerHTML; //grab mpg
+    var date = document.getElementById("date").value; //grab date
+    numSaves = localStorage.getItem("numSaves"); // get numSaves
+    if(numSaves == "null" || numSaves == null) //if it doesn't exist yet, this is the first save
+    {
+      numSaves = 0;
+    }
+    numSaves++;
+    
+    //PULL DATE AND MPG ARRAYS FROM LOCAL STORAGE
+    var dateAr = new Array();
+    var mpgAr = new Array();
+    dateAr = window.localStorage.getArray("dateAr");
+    mpgAr = window.localStorage.getArray("mpgAr");
+    
+    if(dateAr == null) //if date array doesn't exist yet, create
+    {
+      var dateAr = new Array();
+    }
+    
+    if(mpgAr == null) //if mpg array doesn't exist yet, create
+    {
+      var mpgAr = new Array();
+    }
+    
+    //dateAr[numSaves] = date;
+    //mpgAr[numSaves] = mpg;
+    dateAr.push(date);
+    mpgAr.push(mpg);
+    
+    //PUT BOTH ARRAY INTO LOCAL STORAGE
+    window.localStorage.setArray("dateAr", dateAr);
+    window.localStorage.setArray("mpgAr", mpgAr);
+    
+    localStorage.setItem("numSaves", numSaves); //set numSaves in local storage
+    
+    console.log("MPG: " + mpg + ", Date: " + date + ", Save #" + numSaves);
+  }
+  
+  function loadSaves(){
+    console.log("loadSaves");
+    numSaves = localStorage.getItem("numSaves"); // get numSaves
+    if(numSaves == "null" || numSaves == null) //if it doesn't exist yet, this is the first save
+    {
+      numSaves = 0;
+    }
+    
+    var dateAr = new Array();
+    var mpgAr = new Array();
+    dateAr = window.localStorage.getArray("dateAr");
+    mpgAr = window.localStorage.getArray("mpgAr");
+    
+    if(dateAr == null || mpgAr == null) //If there aren't any saves yet
+    {
+      saveOutput.innerHTML = "No saves!";
+    }
+    
+    var i = 0;
+    //create table to display saves
+    var output = "<table border=\"1\"><tr><th>Date</th><th>MPG</th></tr>";
+    for(i = 0; i < numSaves; i++)
+    {
+      output += "<tr><td>" + dateAr[i] + "</td><td>" + mpgAr[i] + "</td></tr>";
+    }
+    output += "</table>";
+    
+    saveOutput.innerHTML = output;
+  }
+</script>
+
+<!--Clear numSaves from console-->
+<script type = "text/javascript">
+  function clearSaves()
+  {
+    localStorage.setItem("numSaves",0);
+    window.localStorage.setArray("dateAr", null);
+    window.localStorage.setArray("mpgAr", null);
+  }
+</script>
+
+<!--Calculation code-->
+<script type = "text/javascript">
+    function calcMPG(){
+      var gallons = 0;
+      var miles = 0;
+      var mpg = 0;
+      
+      gallons = document.getElementById("gallons");
+      miles = document.getElementById("miles");
+      
+      gallons = gallons.value;
+      miles = miles.value;
+
+      mpg = miles/gallons; //make calculation
+      
+      mpg = mpg.toFixed(2); //Round the answer to 2 decimal point
+
+      lblOutput.innerHTML = mpg; //pop out to label
+    }
+</script>
+
+<!--Bar Chart Code-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table, 
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart()
+      {
+        var dateAr = new Array();
+        var mpgAr = new Array();
+        dateAr = window.localStorage.getArray("dateAr");
+        mpgAr = window.localStorage.getArray("mpgAr");
+        
+        console.log(typeof mpgAr);
+        
+        if(dateAr == null || mpgAr == null) //If there aren't any saves yet
+        {
+          chart_div.innerHTML = "No saves!";
+        }
+        
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+          data.addColumn("string", "Date");
+          data.addColumn("number", "MPG");
+          
+          for(i = 0; i < mpgAr.length; i++)
+          {
+            data.addRow([dateAr[i], parseInt(mpgAr[i])]);
+          }
+  
+        // Set chart options
+         var options = {
+            title: 'MPG Over Time',
+            vAxis: {title: 'Date',  titleTextStyle: {color: 'red'}}
+          };
+  
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+</script>
+
+<body>
+  <!--Making tabs-->
+  <ul class = "tabset_tabs">
+    <li><a href = "#calc">Calculate</a></li>
+    <li><a href = "#entries">Entries</a></li>
+    <li><a href = "#history">History</a></li>
+  </ul>
+  
+  <!--Link for history-->
+  <div id="history" class="tabset_content">
+    <h2 class="tabset_label">History</h2>
+    
+    <header>
+      <h1>MPG Calculator</h1>
+    </header>
+    
+    <button type = "button"
+      onclick = "drawChart()"/>
+      Refresh
+    </button>
+    
+    <div id="chart_div" style="width:400; height:300"></div>
+    
+    <footer>
+      Copyright DooDooMcCalculateMPG
+    </footer>
+  </div>
+  
+  <!--Link for entries (deletion, manual entry, and such can be done here)-->
+  <div onload = "loadSaves()" id="entries" class="tabset_content">
+    <h2 class="tabset_label">Entries</h2>
+    
+    <header>
+      <h1>MPG Calculator</h1>
+    </header>
+    
+    <button type = "button"
+      onclick = "loadSaves()"/>
+      Refresh
+    </button>
+    
+    <label id = "saveOutput">
+        Saves
+    </label>
+    
+    <footer>
+      Copyright DooDooMcCalculateMPG
+    </footer>
+  </div>
+  
+  <!--Link for calculator-->
+  <div id="calc" class="tabset_content">
+    <h2 class="tabset_label">Calculate</h2>
+      
+      <header>
+          <h1>MPG Calculator</h1>
+        </header>
+    
+        <div id="stuff">
+          <!--INPUT GALLONS-->
+          <label for = "gallons">Enter gallons
+              <input type = "number"
+                     id = "gallons" 
+                     max = "100"
+                     min = "0" />
+          </label>
+          
+          <!--INPUT MILES-->
+          <label for = "miles">Enter Miles
+              <input type = "number"
+                     id = "miles" 
+                     max = "5000"
+                     min = "0" />
+          </label>
+          
+          <!--CLICK TO DO CALCULATION-->
+            <button type = "button"
+                  onclick= "calcMPG()" />
+                Calculate MPG
+            </button>
+          
+          <!--OUTPUT FOR ANSWER-->
+          <label>MPG:</label>
+          <label id = "lblOutput">
+            00.00
+          </label>
+          
+          <!--Enter date of fill up-->
+           <label for="date">Date
+            <input type="date"
+               id = "date" />
+           </label>
+          
+          <!--CLICK TO SAVE CURRENT CALCULATION-->
+          <button type = "button"
+                  onclick = "saveCalc()"/>
+                Save Current
+          </button>
+  </div>
+  
+  <footer>
+  Copyright DooDooMcCalculateMPG
+  </footer>
+</body>
