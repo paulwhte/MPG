@@ -115,6 +115,38 @@
   }
 </script>
 
+<!--Delete entry button-->
+<script type = "text/javascript">
+  function deleteEntry()
+  {
+    var numDelete = 0;
+    numDelete = document.getElementById("entry");
+    numSaves = localStorage.getItem("numSaves");
+    console.log("Saves: " + numSaves);
+    console.log("Index to delete: " + numDelete);
+    
+    if(numDelete > numSaves)
+    {
+      prompt("No element at that index");
+    }
+    else
+    {
+      var dateAr = new Array();
+      var mpgAr = new Array();
+      dateAr = window.localStorage.getArray("dateAr");
+      mpgAr = window.localStorage.getArray("mpgAr");
+      
+      dateAr.splice(numDelete,1);
+      mpgAr.splice(numDelete,1);
+      numSaves--;
+      
+      window.localStorage.setArray("dateAr", dateAr);
+      window.localStorage.setArray("mpgAr", mpgAr);
+      localStorage.setItem("numSaves",numSaves);
+    }
+  }
+</script>
+
 <!--Calculation code-->
 <script type = "text/javascript">
     function calcMPG(){
@@ -230,6 +262,18 @@
     <label id = "saveOutput">
         Saves
     </label>
+    
+    <label for = "entry">Entry delete:
+        <input type = "number"
+               id = "entry"
+               max= "100"
+               min = "0" />
+    </label>
+    
+    <button type = "button"
+      onclick = "deleteEntry()"/>
+      Delete
+    </button>
     
     <footer>
       Copyright DooDooMcCalculateMPG
