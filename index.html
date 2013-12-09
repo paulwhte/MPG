@@ -13,7 +13,6 @@
   <script type="text/javascript" src="attachevent.js"></script>
   <script type="text/javascript" src="addcss.js"></script>
   <script type="text/javascript" src="tabtastic.js"></script>
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -168,7 +167,7 @@
     }
 </script>
 
-<!--Bar Chart Code-->
+<!--Bar Chart Code, no longer used
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
     
@@ -188,6 +187,7 @@
         var mpgAr = new Array();
         dateAr = window.localStorage.getArray("dateAr");
         mpgAr = window.localStorage.getArray("mpgAr");
+        numSaves = localStorage.getItem("numSaves");
         
         console.log(typeof mpgAr);
         
@@ -201,7 +201,7 @@
           data.addColumn("string", "Date");
           data.addColumn("number", "MPG");
           
-          for(i = 0; i < mpgAr.length; i++)
+          for(i = 0; i < numSaves; i++)
           {
             data.addRow([dateAr[i], parseInt(mpgAr[i])]);
           }
@@ -217,6 +217,57 @@
         chart.draw(data, options);
       }
 </script>
+
+-->
+
+<script type="text/javascript">
+  window.onload = function() {
+
+    var chart = new CanvasJS.Chart("chartContainer",
+    {
+      zoomEnabled: true,
+      panEnabled: true, 
+      title:{
+        text: "MPG Over Time" 
+      },
+      legend: {
+        horizontalAlign: "right",
+        verticalAlign: "center"        
+      },
+      axisY:{
+        includeZero: true,
+        suffix: " MPG"
+      },
+      data: data,  // random generator below
+      
+   });
+
+    chart.render();
+  }   
+    
+    var dateAr = new Array();
+    var mpgAr = new Array();
+    dateAr = window.localStorage.getArray("dateAr");
+    mpgAr = window.localStorage.getArray("mpgAr");
+    numSaves = localStorage.getItem("numSaves");
+    
+    console.log(numSaves);
+    
+    var y = 0;
+    var data = [];
+    var dataSeries = { type: "line", name: "MPG", showInLegend: true};
+    var dataPoints = [];
+    for (var i = 0; i < numSaves; i ++) {
+         dataPoints.push({
+          label: dateAr[i],
+          y: parseInt(mpgAr[i])                
+           });
+        }
+     dataSeries.dataPoints = dataPoints;
+     data.push(dataSeries);
+  
+</script>
+<script type="text/javascript" src="canvasjs.min.js"></script>
 
 <body>
   <!--Making tabs-->
@@ -234,12 +285,21 @@
       <h1>MPG Calculator</h1>
     </header>
     
+    <!--
     <button type = "button"
-      onclick = "drawChart()"/>
-      Refresh
+      onclick = "drawLineGraph()"/>
+      Line Graph
     </button>
     
-    <div id="chart_div" style="width:400; height:300"></div>
+    <button type = "button"
+      onclick = "drawBarGraph()"/>
+      Bar Graph
+    </button>
+    
+    -->
+    
+    <!--<div id="chart_div" style="width:400; height:800"></div>-->
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
     
     <footer>
       Copyright DooDooMcCalculateMPG
