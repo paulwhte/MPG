@@ -96,10 +96,11 @@
     
     var i = 0;
     //create table to display saves
-    var output = "<table border=\"1\"><tr><th>Date</th><th>MPG</th></tr>";
+    var output = "<table border=\"1\"><tr><th>#</th><th>Date</th><th>MPG</th></tr>";
     for(i = 0; i < numSaves; i++)
     {
-      output += "<tr><td>" + dateAr[i] + "</td><td>" + mpgAr[i] + "</td></tr>";
+      var j = i+1;
+      output += "<tr><td>" + j + "</td><td>" + dateAr[i] + "</td><td>" + mpgAr[i] + "</td></tr>";
     }
     output += "</table>";
     
@@ -125,26 +126,33 @@
 <script type = "text/javascript">
   function deleteEntry()
   {
+    var answer = confirm("Are you sure you want to delete this entry?");
     
-    var numDelete = 0;
-    numDelete = document.getElementById("deleteEntry").value;
-    numSaves = localStorage.getItem("numSaves");
-    console.log("Saves: " + numSaves);
-    console.log("Index to delete: " + numDelete);
-    
-    var dateAr = new Array();
-    var mpgAr = new Array();
-    dateAr = window.localStorage.getArray("dateAr");
-    mpgAr = window.localStorage.getArray("mpgAr");
-    
-    dateAr.splice(numDelete,1);
-    mpgAr.splice(numDelete,1);
-    numSaves--;
-    if(numSaves < 0) numSaves = 0;
-    
-    window.localStorage.setArray("dateAr", dateAr);
-    window.localStorage.setArray("mpgAr", mpgAr);
-    localStorage.setItem("numSaves",numSaves);
+    if(answer){
+      var numDelete = 0;
+      numDelete = document.getElementById("deleteEntry").value;
+      numSaves = localStorage.getItem("numSaves");
+      console.log("Saves: " + numSaves);
+      console.log("Index to delete: " + numDelete);
+      
+      if(numDelete > numSaves) {
+        alert("No save in that index");
+      } else {
+        var dateAr = new Array();
+        var mpgAr = new Array();
+        dateAr = window.localStorage.getArray("dateAr");
+        mpgAr = window.localStorage.getArray("mpgAr");
+        
+        dateAr.splice(numDelete-1,1);
+        mpgAr.splice(numDelete-1,1);
+        numSaves--;
+        if(numSaves < 0) numSaves = 0;
+        
+        window.localStorage.setArray("dateAr", dateAr);
+        window.localStorage.setArray("mpgAr", mpgAr);
+        localStorage.setItem("numSaves",numSaves);
+      }
+    } 
   }
 </script>
 
@@ -292,6 +300,10 @@
     <a href= http://phrogz.net/js/Tabtastic/index.html>Tabtastic</a>
     <h3>Charts</h3>
     <a href = canvasjs.com>CanvasJS</a>
+    
+    <footer>
+      Copyright DooDooMcCalculateMPG
+    </footer>
   </div>
   
   <!--Link for history-->
