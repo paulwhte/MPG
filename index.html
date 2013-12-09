@@ -96,7 +96,7 @@
     
     var mpg = document.getElementById("lblOutput").innerHTML; //grab mpg
     var date = document.getElementById("date").value; //grab date
-    numSaves = localStorage.getItem("numSaves"); // get numSaves
+    var numSaves = localStorage.getItem("numSaves"); // get numSaves
     if(numSaves == "null" || numSaves == null) //if it doesn't exist yet, this is the first save
     {
       numSaves = 0;
@@ -135,7 +135,7 @@
   
   function loadSaves(){
     console.log("loadSaves");
-    numSaves = localStorage.getItem("numSaves"); // get numSaves
+    var numSaves = localStorage.getItem("numSaves"); // get numSaves
     if(numSaves == "null" || numSaves == null) //if it doesn't exist yet, this is the first save
     {
       numSaves = 0;
@@ -291,7 +291,8 @@
 
 <script type="text/javascript">
   function drawChart() {
-
+    console.log("drawChart");
+      
     var chart = new CanvasJS.Chart("chartContainer",
     {
       zoomEnabled: true,
@@ -316,17 +317,18 @@
     
     var dateAr = new Array();
     var mpgAr = new Array();
+    var saves;
     dateAr = window.localStorage.getArray("dateAr");
     mpgAr = window.localStorage.getArray("mpgAr");
-    numSaves = localStorage.getItem("numSaves");
+    saves = localStorage.getItem("numSaves");
     
-    console.log(numSaves);
+    console.log(saves);
     
     var y = 0;
     var data = [];
     var dataSeries = { type: "line", name: "MPG", showInLegend: true};
     var dataPoints = [];
-    for (var i = 0; i < numSaves; i ++) {
+    for (var i = 0; i < mpgAr.length; i ++) {
          dataPoints.push({
           label: dateAr[i],
           y: parseInt(mpgAr[i])                
@@ -377,7 +379,7 @@
     <hr>
     
     <footer>
-      Copyright DooDooMcCalculateMPG
+      Copyright McCalculateMPG
     </footer>
   </div>
   
@@ -405,7 +407,7 @@
     <hr>
     
     <footer>
-      Copyright DooDooMcCalculateMPG
+      Copyright McCalculateMPG
     </footer>
   </div>
   
@@ -443,7 +445,7 @@
     <hr>
     
     <footer>
-      Copyright DooDooMcCalculateMPG
+      Copyright McCalculateMPG
     </footer>
   </div>
   
@@ -469,7 +471,7 @@
           </label>
           
           <!--CLICK TO DO CALCULATION-->
-            <button class = "pure-button pure-button-primary type = "button"
+            <button class = "pure-button pure-button-primary" type = "button"
                   onclick= "calcMPG()" />
                 Calculate MPG
             </button>
@@ -487,7 +489,7 @@
           </form>
           
           <!--CLICK TO SAVE CURRENT CALCULATION-->
-          <button class = "pure-button pure-button-primary type = "button"
+          <button class = "pure-button pure-button-primary" type = "button"
                   onclick = "saveCalc()"/>
                 Save Current
           </button>
@@ -496,6 +498,6 @@
   <hr>
   
   <footer>
-  Copyright DooDooMcCalculateMPG
+  Copyright McCalculateMPG
   </footer>
 </body>
