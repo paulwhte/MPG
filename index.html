@@ -13,7 +13,10 @@
   <script type="text/javascript" src="attachevent.js"></script>
   <script type="text/javascript" src="addcss.js"></script>
   <script type="text/javascript" src="tabtastic.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
 </head>
 
 <!--History saves-->
@@ -108,9 +111,13 @@
 <script type = "text/javascript">
   function clearSaves()
   {
-    localStorage.setItem("numSaves",0);
-    window.localStorage.setArray("dateAr", null);
-    window.localStorage.setArray("mpgAr", null);
+    console.log("clear all");
+    var answer = confirm('Are you sure you want to delete all entries?')
+    if (answer) {
+      localStorage.setItem("numSaves",0);
+      window.localStorage.setArray("dateAr", null);
+      window.localStorage.setArray("mpgAr", null);
+    }
   }
 </script>
 
@@ -118,31 +125,26 @@
 <script type = "text/javascript">
   function deleteEntry()
   {
+    
     var numDelete = 0;
-    numDelete = document.getElementById("entry");
+    numDelete = document.getElementById("deleteEntry").value;
     numSaves = localStorage.getItem("numSaves");
     console.log("Saves: " + numSaves);
     console.log("Index to delete: " + numDelete);
     
-    if(numDelete > numSaves)
-    {
-      prompt("No element at that index");
-    }
-    else
-    {
-      var dateAr = new Array();
-      var mpgAr = new Array();
-      dateAr = window.localStorage.getArray("dateAr");
-      mpgAr = window.localStorage.getArray("mpgAr");
-      
-      dateAr.splice(numDelete,1);
-      mpgAr.splice(numDelete,1);
-      numSaves--;
-      
-      window.localStorage.setArray("dateAr", dateAr);
-      window.localStorage.setArray("mpgAr", mpgAr);
-      localStorage.setItem("numSaves",numSaves);
-    }
+    var dateAr = new Array();
+    var mpgAr = new Array();
+    dateAr = window.localStorage.getArray("dateAr");
+    mpgAr = window.localStorage.getArray("mpgAr");
+    
+    dateAr.splice(numDelete,1);
+    mpgAr.splice(numDelete,1);
+    numSaves--;
+    if(numSaves < 0) numSaves = 0;
+    
+    window.localStorage.setArray("dateAr", dateAr);
+    window.localStorage.setArray("mpgAr", mpgAr);
+    localStorage.setItem("numSaves",numSaves);
   }
 </script>
 
@@ -221,7 +223,7 @@
 -->
 
 <script type="text/javascript">
-  window.onload = function() {
+  function drawChart() {
 
     var chart = new CanvasJS.Chart("chartContainer",
     {
@@ -269,27 +271,39 @@
 </script>
 <script type="text/javascript" src="canvasjs.min.js"></script>
 
+  <header>
+    <h1>MPG Calculator</h1>
+  </header>
+
 <body>
   <!--Making tabs-->
   <ul class = "tabset_tabs">
     <li><a href = "#calc">Calculate</a></li>
     <li><a href = "#entries">Entries</a></li>
     <li><a href = "#history">History</a></li>
+    <li><a href = "#sources">Sources</a></li>
   </ul>
+  
+  <!--Link for sources-->
+  <div id="sources" class="tabset_content">
+    <h2 class="tabset_label">Sources</h2>
+    
+    <h3>Tab Structure</h3>
+    <a href= http://phrogz.net/js/Tabtastic/index.html>Tabtastic</a>
+    <h3>Charts</h3>
+    <a href = canvasjs.com>CanvasJS</a>
+  </div>
   
   <!--Link for history-->
   <div id="history" class="tabset_content">
     <h2 class="tabset_label">History</h2>
     
-    <header>
-      <h1>MPG Calculator</h1>
-    </header>
+    <button type = "button"
+      onclick = "drawChart()"/>
+      Refresh
+    </button>
     
     <!--
-    <button type = "button"
-      onclick = "drawLineGraph()"/>
-      Line Graph
-    </button>
     
     <button type = "button"
       onclick = "drawBarGraph()"/>
@@ -310,10 +324,6 @@
   <div onload = "loadSaves()" id="entries" class="tabset_content">
     <h2 class="tabset_label">Entries</h2>
     
-    <header>
-      <h1>MPG Calculator</h1>
-    </header>
-    
     <button type = "button"
       onclick = "loadSaves()"/>
       Refresh
@@ -323,9 +333,9 @@
         Saves
     </label>
     
-    <label for = "entry">Entry delete:
+    <label for = "deleteEntry">Entry delete:
         <input type = "number"
-               id = "entry"
+               id = "deleteEntry"
                max= "100"
                min = "0" />
     </label>
@@ -333,6 +343,11 @@
     <button type = "button"
       onclick = "deleteEntry()"/>
       Delete
+    </button>
+    
+    <button type = "button"
+      onclick = "clearSaves()"/>
+      Clear All
     </button>
     
     <footer>
@@ -343,10 +358,6 @@
   <!--Link for calculator-->
   <div id="calc" class="tabset_content">
     <h2 class="tabset_label">Calculate</h2>
-      
-      <header>
-          <h1>MPG Calculator</h1>
-        </header>
     
         <div id="stuff">
           <!--INPUT GALLONS-->
@@ -378,10 +389,10 @@
           </label>
           
           <!--Enter date of fill up-->
-           <label for="date">Date
-            <input type="number"
-               id = "date" />
-           </label>
+          <form>
+            <label for="date-1">Date:</label>
+            <input type="date" data-clear-btn="false" name="date" id="date" value="">
+          </form>
           
           <!--CLICK TO SAVE CURRENT CALCULATION-->
           <button type = "button"
